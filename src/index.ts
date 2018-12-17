@@ -1,29 +1,17 @@
 import { InversifyKoaServer } from "./server";
-import { controller, httpMethod, httpGet, httpPut, httpPost, httpPatch,
-        httpHead, all, httpDelete, request, response, requestParam, queryParam,
-        requestBody, requestHeaders, cookies, next } from "./decorators";
+import { Controller, HttpMethod, All, HttpGet, HttpPost, HttpPut, HttpPatch,
+    HttpHead, HttpDelete, Request, Response, params, RequestParam,
+    RequestBody, QueryParam, RequestHeaders, Cookies,
+    Next, Context } from "./decorators";
 import { TYPE } from "./constants";
 import { interfaces } from "./interfaces";
 
 export {
     interfaces,
     InversifyKoaServer,
-    controller,
-    httpMethod,
-    httpGet,
-    httpPut,
-    httpPost,
-    httpPatch,
-    httpHead,
-    all,
-    httpDelete,
     TYPE,
-    request,
-    response,
-    requestParam,
-    queryParam,
-    requestBody,
-    requestHeaders,
-    cookies,
-    next
+    Controller, HttpMethod, All, HttpGet, HttpPost, HttpPut, HttpPatch,
+    HttpHead, HttpDelete, Request, Response, params, RequestParam,
+    RequestBody, QueryParam, RequestHeaders, Cookies,
+    Next, Context
 };

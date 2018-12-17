@@ -7,8 +7,8 @@ import { Container, injectable } from "inversify";
 import { TYPE } from "../src/constants";
 import * as supertest from "supertest";
 import {
-    controller, httpMethod, httpGet, request,
-    response, requestParam, queryParam
+    Controller, HttpMethod, HttpGet, Request,
+    Response, RequestParam, QueryParam
 } from "../src/decorators";
 
 describe("Unit Test: Previous bugs", () => {
@@ -18,12 +18,12 @@ describe("Unit Test: Previous bugs", () => {
         let container = new Container();
 
         @injectable()
-        @controller("/api/test")
+        @Controller("/api/test")
         class TestController {
-            @httpGet("/")
+            @HttpGet("/")
             public get(
-                @request() req: Koa.Request,
-                @response() res: Koa.Response
+                @Request() req: Koa.Request,
+                @Response() res: Koa.Response
             ) {
                 expect(req.url).not.to.eql(undefined);
                 expect((req as any).setHeader).to.eql(undefined);
@@ -31,11 +31,11 @@ describe("Unit Test: Previous bugs", () => {
                 expect((res as any).url).to.eql(undefined);
                 res.body = [{ id: 1 }, { id: 2 }];
             }
-            @httpGet("/:id")
+            @HttpGet("/:id")
             public getById(
-                @requestParam("id") id: string,
-                @request() req: Koa.Request,
-                @response() res: Koa.Response
+                @RequestParam("id") id: string,
+                @Request() req: Koa.Request,
+                @Response() res: Koa.Response
             ) {
                 expect(id).to.eql("5");
                 expect(req.url).not.to.eql(undefined);
@@ -74,14 +74,14 @@ describe("Unit Test: Previous bugs", () => {
         let container = new Container();
 
         @injectable()
-        @controller("/api/test")
+        @Controller("/api/test")
         class TestController {
-            @httpGet("/")
+            @HttpGet("/")
             public get(
-                @request() req: Koa.Request,
-                @response() res: Koa.Response,
-                @queryParam("empty") empty: string,
-                @queryParam("test") test: string
+                @Request() req: Koa.Request,
+                @Response() res: Koa.Response,
+                @QueryParam("empty") empty: string,
+                @QueryParam("test") test: string
             ) {
                 return {empty: empty, test: test};
             }

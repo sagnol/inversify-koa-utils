@@ -27,7 +27,7 @@ Please refer to the [InversifyJS documentation](https://github.com/inversify/Inv
 ## The Basics
 
 ### Step 1: Decorate your controllers
-To use a class as a "controller" for your koa app, simply add the `@controller` decorator to the class. Similarly, decorate methods of the class to serve as request handlers.
+To use a class as a "controller" for your koa app, simply add the `@Controller` decorator to the class. Similarly, decorate methods of the class to serve as request handlers.
 The following example will declare a controller that responds to `GET /foo'.
 
 ```ts
@@ -35,18 +35,18 @@ import * as Koa from 'koa';
 import { interfaces, Controller, Get, Post, Delete } from 'inversify-koa-utils';
 import { injectable, inject } from 'inversify';
 
-@controller('/foo')
+@Controller('/foo')
 @injectable()
 export class FooController implements interfaces.Controller {
 
     constructor( @inject('FooService') private fooService: FooService ) {}
 
-    @httpGet('/')
+    @HttpGet('/')
     private index(ctx: Router.IRouterContext , next: () => Promise<any>): string {
         return this.fooService.get(ctx.query.id);
     }
 
-    @httpGet('/basickoacascading')
+    @HttpGet('/basickoacascading')
     private koacascadingA(ctx: Router.IRouterContext, nextFunc: () => Promise<any>): string {
         const start = new Date();
         await nextFunc();
@@ -54,18 +54,18 @@ export class FooController implements interfaces.Controller {
         ctx.set("X-Response-Time", `${ms}ms`);
     }
 
-    @httpGet('/basickoacascading')
+    @HttpGet('/basickoacascading')
     private koacascadingB(ctx: Router.IRouterContext , next: () => Promise<any>): string {
         ctx.body = "Hello World";
     }
 
-    @httpGet('/')
-    private list(@queryParams('start') start: number, @queryParams('count') cound: number): string {
+    @HttpGet('/')
+    private list(@QueryParam('start') start: number, @QueryParam('count') cound: number): string {
         return this.fooService.get(start, count);
     }
 
-    @httpPost('/')
-    private async create(@response() res: Koa.Response) {
+    @HttpPost('/')
+    private async create(@Response() res: Koa.Response) {
         try {
             await this.fooService.create(req.body)
             res.body = 201
@@ -75,8 +75,8 @@ export class FooController implements interfaces.Controller {
         }
     }
 
-    @httpDelete('/:id')
-    private delete(@requestParam("id") id: string, @response() res: Koa.Response): Promise<void> {
+    @HttpDelete('/:id')
+    private delete(@RequestParam("id") id: string, @Response() res: Koa.Response): Promise<void> {
         return this.fooService.delete(id)
             .then(() => res.body = 204)
             .catch((err) => {
@@ -204,40 +204,40 @@ let server = new InversifyKoaServer(container, null, null, app);
 
 ## Decorators
 
-### `@controller(path, [middleware, ...])`
+### `@Controller(path, [middleware, ...])`
 
 Registers the decorated class as a controller with a root path, and optionally registers any global middleware for this controller.
 
-### `@httpMethod(method, path, [middleware, ...])`
+### `@HttpMethod(method, path, [middleware, ...])`
 
 Registers the decorated controller method as a request handler for a particular path and method, where the method name is a valid koa routing method.
 
 ### `@SHORTCUT(path, [middleware, ...])`
 
-Shortcut decorators which are simply wrappers for `@httpMethod`. Right now these include `@httpGet`, `@httpPost`, `@httpPut`, `@httpPatch`, `@httpHead`, `@httpDelete`, and `@All`. For anything more obscure, use `@httpMethod` (Or make a PR :smile:).
+Shortcut decorators which are simply wrappers for `@HttpMethod`. Right now these include `@HttpGet`, `@HttpPost`, `@HttpPut`, `@HttpPatch`, `@HttpHead`, `@HttpDelete`, and `@All`. For anything more obscure, use `@HttpMethod` (Or make a PR :smile:).
 
-### `@request()`
+### `@Request()`
 Binds a method parameter to the request object.
 
-### `@response()`
+### `@Response()`
 Binds a method parameter to the response object.
 
-### `@requestParam(name?: string)`
+### `@RequestParam(name?: string)`
 Binds a method parameter to request.params object or to a specific parameter if a name is passed.
 
 ### `@queryParam(name?: string)`
 Binds a method parameter to request.query or to a specific query parameter if a name is passed.
 
-### `@requestBody(name?: string)`
+### `@RequestBody(name?: string)`
 Binds a method parameter to request.body or to a specific body property if a name is passed. If the bodyParser middleware is not used on the koa app, this will bind the method parameter to the koa request object.
 
-### `@requestHeaders(name?: string)`
+### `@RequestHeaders(name?: string)`
 Binds a method parameter to the request headers.
 
-### `@cookies()`
+### `@Cookies()`
 Binds a method parameter to the request cookies.
 
-### `@next()`
+### `@Next()`
 Binds a method parameter to the next() function.
 
 ## License

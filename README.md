@@ -36,7 +36,6 @@ import { interfaces, Controller, Get, Post, Delete } from 'inversify-koa-utils';
 import { injectable, inject } from 'inversify';
 
 @Controller('/foo')
-@injectable()
 export class FooController implements interfaces.Controller {
 
     constructor( @inject('FooService') private fooService: FooService ) {}

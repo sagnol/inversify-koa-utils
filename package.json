@@ -20,7 +20,6 @@
   ],
   "author": "sagnol",
   "license": "ISC",
-  "private": true,
   "bugs": {
     "url": "https://github.com/diego-d5000/inversify-koa-utils/issues"
   },

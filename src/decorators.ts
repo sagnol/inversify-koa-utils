@@ -1,42 +1,42 @@
 import { interfaces } from "./interfaces";
 import { METADATA_KEY, PARAMETER_TYPE } from "./constants";
 
-export function controller(path: string, ...middleware: interfaces.Middleware[]) {
+export function Controller(path: string, ...middleware: interfaces.Middleware[]) {
     return function (target: any) {
         let metadata: interfaces.ControllerMetadata = {path, middleware, target};
         Reflect.defineMetadata(METADATA_KEY.controller, metadata, target);
     };
 }
 
-export function all   (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
-    return httpMethod("all",    path, ...middleware);
+export function All   (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+    return HttpMethod("all",    path, ...middleware);
 }
 
-export function httpGet   (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
-    return httpMethod("get",    path, ...middleware);
+export function HttpGet   (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+    return HttpMethod("get",    path, ...middleware);
 }
 
-export function httpPost  (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
-    return httpMethod("post",   path, ...middleware);
+export function HttpPost  (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+    return HttpMethod("post",   path, ...middleware);
 }
 
-export function httpPut   (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
-    return httpMethod("put",    path, ...middleware);
+export function HttpPut   (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+    return HttpMethod("put",    path, ...middleware);
 }
 
-export function httpPatch (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
-    return httpMethod("patch",  path, ...middleware);
+export function HttpPatch (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+    return HttpMethod("patch",  path, ...middleware);
 }
 
-export function httpHead  (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
-    return httpMethod("head",   path, ...middleware);
+export function HttpHead  (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+    return HttpMethod("head",   path, ...middleware);
 }
 
-export function httpDelete(path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
-    return httpMethod("delete", path, ...middleware);
+export function HttpDelete(path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+    return HttpMethod("delete", path, ...middleware);
 }
 
-export function httpMethod(method: string, path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+export function HttpMethod(method: string, path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
     return function (target: any, key: string, value: any) {
         let metadata: interfaces.ControllerMethodMetadata = {path, middleware, method, target, key};
         let metadataList: interfaces.ControllerMethodMetadata[] = [];
@@ -51,15 +51,15 @@ export function httpMethod(method: string, path: string, ...middleware: interfac
     };
 }
 
-export const request = paramDecoratorFactory(PARAMETER_TYPE.REQUEST);
-export const response = paramDecoratorFactory(PARAMETER_TYPE.RESPONSE);
-export const requestParam = paramDecoratorFactory(PARAMETER_TYPE.PARAMS);
-export const queryParam = paramDecoratorFactory(PARAMETER_TYPE.QUERY);
-export const requestBody = paramDecoratorFactory(PARAMETER_TYPE.BODY);
-export const requestHeaders = paramDecoratorFactory(PARAMETER_TYPE.HEADERS);
-export const cookies = paramDecoratorFactory(PARAMETER_TYPE.COOKIES);
-export const next = paramDecoratorFactory(PARAMETER_TYPE.NEXT);
-export const context = paramDecoratorFactory(PARAMETER_TYPE.CTX);
+export const Request = paramDecoratorFactory(PARAMETER_TYPE.REQUEST);
+export const Response = paramDecoratorFactory(PARAMETER_TYPE.RESPONSE);
+export const RequestParam = paramDecoratorFactory(PARAMETER_TYPE.PARAMS);
+export const QueryParam = paramDecoratorFactory(PARAMETER_TYPE.QUERY);
+export const RequestBody = paramDecoratorFactory(PARAMETER_TYPE.BODY);
+export const RequestHeaders = paramDecoratorFactory(PARAMETER_TYPE.HEADERS);
+export const Cookies = paramDecoratorFactory(PARAMETER_TYPE.COOKIES);
+export const Next = paramDecoratorFactory(PARAMETER_TYPE.NEXT);
+export const Context = paramDecoratorFactory(PARAMETER_TYPE.CTX);
 
 
 function paramDecoratorFactory(parameterType: PARAMETER_TYPE): (name?: string) => ParameterDecorator {

@@ -1,15 +1,15 @@
 import { expect } from "chai";
-import { controller, httpMethod, params } from "../src/decorators";
+import { Controller, HttpMethod, params } from "../src/decorators";
 import { interfaces } from "../src/interfaces";
 import { METADATA_KEY, PARAMETER_TYPE } from "../src/constants";
 
 describe("Unit Test: Controller Decorators", () => {
 
-    it("should add controller metadata to a class when decorated with @controller", (done) => {
+    it("should add controller metadata to a class when decorated with @Controller", (done) => {
         let middleware = [function() { return; }, "foo", Symbol("bar")];
         let path = "foo";
 
-        @controller(path, ...middleware)
+        @Controller(path, ...middleware)
         class TestController {}
 
         let controllerMetadata: interfaces.ControllerMetadata = Reflect.getMetadata("_controller", TestController);
@@ -21,19 +21,19 @@ describe("Unit Test: Controller Decorators", () => {
     });
 
 
-    it("should add method metadata to a class when decorated with @httpMethod", (done) => {
+    it("should add method metadata to a class when decorated with @HttpMethod", (done) => {
         let middleware = [function() { return; }, "bar", Symbol("baz")];
         let path = "foo";
         let method = "get";
 
         class TestController {
-            @httpMethod(method, path, ...middleware)
+            @HttpMethod(method, path, ...middleware)
             public test() { return; }
 
-            @httpMethod("foo", "bar")
+            @HttpMethod("foo", "bar")
             public test2() { return; }
 
-            @httpMethod("bar", "foo")
+            @HttpMethod("bar", "foo")
             public test3() { return; }
         }
 
@@ -58,13 +58,13 @@ describe("Unit Test: Controller Decorators", () => {
         let methodName = "test";
 
         class TestController {
-            @httpMethod(method, path, ...middleware)
+            @HttpMethod(method, path, ...middleware)
             public test(@params(PARAMETER_TYPE.PARAMS, "id") id: any, @params(PARAMETER_TYPE.PARAMS, "cat") cat: any) { return; }
 
-            @httpMethod("foo", "bar")
+            @HttpMethod("foo", "bar")
             public test2(@params(PARAMETER_TYPE.PARAMS, "dog")dog: any) { return; }
 
-            @httpMethod("bar", "foo")
+            @HttpMethod("bar", "foo")
             public test3() { return; }
         }
         let methodMetadataList: interfaces.ControllerParameterMetadata =

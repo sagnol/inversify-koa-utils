@@ -1,10 +1,32 @@
+import { inject, injectable, decorate } from "inversify";
 import { interfaces } from "./interfaces";
 import { METADATA_KEY, PARAMETER_TYPE } from "./constants";
 
 export function Controller(path: string, ...middleware: interfaces.Middleware[]) {
     return function (target: any) {
-        let metadata: interfaces.ControllerMetadata = {path, middleware, target};
+        const metadata: interfaces.ControllerMetadata = {path, middleware, target};
+
+        decorate(injectable(), target);
         Reflect.defineMetadata(METADATA_KEY.controller, metadata, target);
+
+        // We need to create an array that contains the metadata of all
+        // the controllers in the application, the metadata cannot be
+        // attached to a controller. It needs to be attached to a global
+        // We attach metadata to the Reflect object itself to avoid
+        // declaring additonal globals. Also, the Reflect is avaiable
+        // in both node and web browsers.
+        const previousMetadata: interfaces.ControllerMetadata[] = Reflect.getMetadata(
+            METADATA_KEY.controller,
+            Reflect
+        ) || [];
+
+        const newMetadata = [metadata, ...previousMetadata];
+
+        Reflect.defineMetadata(
+            METADATA_KEY.controller,
+            newMetadata,
+            Reflect
+        );
     };
 }
 

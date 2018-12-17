@@ -30,7 +30,7 @@ describe("Integration Tests:", () => {
     describe("Routing & Request Handling:", () => {
 
         it("should work for basic koa cascading (using async/await)", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/") public async getTest(ctx: Router.IRouterContext, nextFunc: () => Promise<any>) {
@@ -53,7 +53,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should work for basic koa cascading (using promises)", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/") public async getTest(ctx: Router.IRouterContext, nextFunc: () => Promise<any>) {
@@ -74,7 +74,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should work for methods which call nextFunc()", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/") public async getTest(ctx: Router.IRouterContext, nextFunc: () => Promise<any>) {
@@ -95,7 +95,7 @@ describe("Integration Tests:", () => {
 
 
         it("should work for async methods which call nextFunc()", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/") public getTest(ctx: Router.IRouterContext, nextFunc: () => Promise<any>) {
@@ -121,7 +121,7 @@ describe("Integration Tests:", () => {
 
 
         it("should work for async methods called by nextFunc()", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/") public async getTest(ctx: Router.IRouterContext, nextFunc: () => Promise<any>) {
@@ -144,7 +144,7 @@ describe("Integration Tests:", () => {
 
 
         it("should work for each shortcut decorator", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/") public getTest(ctx: Router.IRouterContext) { ctx.body = "GET"; }
@@ -171,7 +171,7 @@ describe("Integration Tests:", () => {
 
 
         it("should work for more obscure HTTP methods using the HttpMethod decorator", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @HttpMethod("propfind", "/") public getTest(ctx: Router.IRouterContext) { ctx.body = "PROPFIND"; }
@@ -188,7 +188,7 @@ describe("Integration Tests:", () => {
         it("should use returned values as Response", (done) => {
             let result = { "hello": "world" };
 
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/") public getTest(ctx: Router.IRouterContext) { return result; }
@@ -202,7 +202,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should use custom router passed from configuration", () => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("endpoint") public get() {
@@ -239,7 +239,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should use custom routing configuration", () => {
-            @injectable()
+            // @injectable()
             @Controller("/ping")
             class TestController {
                 @Get("/endpoint") public get() {
@@ -286,7 +286,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should call method-level middleware correctly (GET)", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/", spyA, spyB, spyC) public getTest(ctx: Router.IRouterContext) { ctx.body = "GET"; }
@@ -307,7 +307,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should call method-level middleware correctly (POST)", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Post("/", spyA, spyB, spyC) public postTest(ctx: Router.IRouterContext) { ctx.body = "POST"; }
@@ -328,7 +328,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should call method-level middleware correctly (PUT)", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Put("/", spyA, spyB, spyC) public postTest(ctx: Router.IRouterContext) { ctx.body = "PUT"; }
@@ -349,7 +349,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should call method-level middleware correctly (PATCH)", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Patch("/", spyA, spyB, spyC) public postTest(ctx: Router.IRouterContext) { ctx.body = "PATCH"; }
@@ -370,7 +370,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should call method-level middleware correctly (HEAD)", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Head("/", spyA, spyB, spyC) public postTest(ctx: Router.IRouterContext) { ctx.body = "HEAD"; }
@@ -391,7 +391,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should call method-level middleware correctly (DELETE)", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Delete("/", spyA, spyB, spyC) public postTest(ctx: Router.IRouterContext) { ctx.body = "DELETE"; }
@@ -412,7 +412,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should call method-level middleware correctly (ALL)", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @All("/", spyA, spyB, spyC) public postTest(ctx: Router.IRouterContext) { ctx.body = "ALL"; }
@@ -434,7 +434,7 @@ describe("Integration Tests:", () => {
 
 
         it("should call Controller-level middleware correctly", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/", spyA, spyB, spyC)
             class TestController {
                 @Get("/") public getTest(ctx: Router.IRouterContext) { ctx.body = "GET"; }
@@ -455,7 +455,7 @@ describe("Integration Tests:", () => {
 
 
         it("should call server-level middleware correctly", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/") public getTest(ctx: Router.IRouterContext) { ctx.body = "GET"; }
@@ -483,7 +483,7 @@ describe("Integration Tests:", () => {
 
 
         it("should call all middleware in correct order", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/", spyB)
             class TestController {
                 @Get("/", spyC) public getTest(ctx: Router.IRouterContext) { ctx.body = "GET"; }
@@ -511,7 +511,7 @@ describe("Integration Tests:", () => {
             const symbolId = Symbol("spyA");
             const strId = "spyB";
 
-            @injectable()
+            // @injectable()
             @Controller("/", symbolId, strId)
             class TestController {
                 @Get("/") public getTest(ctx: Router.IRouterContext) { ctx.body = "GET"; }
@@ -538,7 +538,7 @@ describe("Integration Tests:", () => {
             const symbolId = Symbol("spyA");
             const strId = "spyB";
 
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/", symbolId, strId)
@@ -566,7 +566,7 @@ describe("Integration Tests:", () => {
             const symbolId = Symbol("spyA");
             const strId = "spyB";
 
-            @injectable()
+            // @injectable()
             @Controller("/", symbolId)
             class TestController {
                 @Get("/", strId)
@@ -592,7 +592,7 @@ describe("Integration Tests:", () => {
     });
     describe("Parameters:", () => {
         it("should bind a method parameter to the url parameter of the web Request", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 // tslint:disable-next-line:max-line-length
@@ -609,7 +609,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should bind a method parameter to the Request object", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get(":id") public getTest( @Request() req: Koa.Request) {
@@ -625,7 +625,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should bind a method parameter to the Response object", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/") public getTest( @Response() res: Koa.Response) {
@@ -641,7 +641,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should bind a method parameter to the context object", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/") public getTest( @Context() ctx: Koa.Context) {
@@ -657,7 +657,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should bind a method parameter to a query parameter", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/") public getTest( @QueryParam("id") id: string) {
@@ -674,7 +674,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should bind a method parameter to the Request body", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Post("/") public getTest( @RequestBody() reqBody: string) {
@@ -695,7 +695,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should bind a method parameter to the Request headers", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/") public getTest( @RequestHeaders("testhead") headers: any) {
@@ -712,7 +712,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should bind a method parameter to a cookie", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/") public getCookie(@Cookies("cookie") cookie: any, ctx: Router.IRouterContext) {
@@ -738,7 +738,7 @@ describe("Integration Tests:", () => {
         });
 
         it("should bind a method parameter to the next function", (done) => {
-            @injectable()
+            // @injectable()
             @Controller("/")
             class TestController {
                 @Get("/") public async getTest( @Next() nextFunc: any) {

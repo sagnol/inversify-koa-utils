@@ -17,7 +17,7 @@ describe("Unit Test: Previous bugs", () => {
 
         let container = new Container();
 
-        @injectable()
+        // @injectable()
         @Controller("/api/test")
         class TestController {
             @Get("/")
@@ -73,7 +73,7 @@ describe("Unit Test: Previous bugs", () => {
     it("should support empty query params", (done) => {
         let container = new Container();
 
-        @injectable()
+        // @injectable()
         @Controller("/api/test")
         class TestController {
             @Get("/")

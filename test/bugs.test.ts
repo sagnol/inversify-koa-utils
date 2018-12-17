@@ -7,7 +7,7 @@ import { Container, injectable } from "inversify";
 import { TYPE } from "../src/constants";
 import * as supertest from "supertest";
 import {
-    Controller, HttpMethod, HttpGet, Request,
+    Controller, HttpMethod, Get, Request,
     Response, RequestParam, QueryParam
 } from "../src/decorators";
 
@@ -20,7 +20,7 @@ describe("Unit Test: Previous bugs", () => {
         @injectable()
         @Controller("/api/test")
         class TestController {
-            @HttpGet("/")
+            @Get("/")
             public get(
                 @Request() req: Koa.Request,
                 @Response() res: Koa.Response
@@ -31,7 +31,7 @@ describe("Unit Test: Previous bugs", () => {
                 expect((res as any).url).to.eql(undefined);
                 res.body = [{ id: 1 }, { id: 2 }];
             }
-            @HttpGet("/:id")
+            @Get("/:id")
             public getById(
                 @RequestParam("id") id: string,
                 @Request() req: Koa.Request,
@@ -76,7 +76,7 @@ describe("Unit Test: Previous bugs", () => {
         @injectable()
         @Controller("/api/test")
         class TestController {
-            @HttpGet("/")
+            @Get("/")
             public get(
                 @Request() req: Koa.Request,
                 @Response() res: Koa.Response,

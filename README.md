@@ -41,12 +41,12 @@ export class FooController implements interfaces.Controller {
 
     constructor( @inject('FooService') private fooService: FooService ) {}
 
-    @HttpGet('/')
+    @Get('/')
     private index(ctx: Router.IRouterContext , next: () => Promise<any>): string {
         return this.fooService.get(ctx.query.id);
     }
 
-    @HttpGet('/basickoacascading')
+    @Get('/basickoacascading')
     private koacascadingA(ctx: Router.IRouterContext, nextFunc: () => Promise<any>): string {
         const start = new Date();
         await nextFunc();
@@ -54,17 +54,17 @@ export class FooController implements interfaces.Controller {
         ctx.set("X-Response-Time", `${ms}ms`);
     }
 
-    @HttpGet('/basickoacascading')
+    @Get('/basickoacascading')
     private koacascadingB(ctx: Router.IRouterContext , next: () => Promise<any>): string {
         ctx.body = "Hello World";
     }
 
-    @HttpGet('/')
+    @Get('/')
     private list(@QueryParam('start') start: number, @QueryParam('count') cound: number): string {
         return this.fooService.get(start, count);
     }
 
-    @HttpPost('/')
+    @Post('/')
     private async create(@Response() res: Koa.Response) {
         try {
             await this.fooService.create(req.body)
@@ -75,7 +75,7 @@ export class FooController implements interfaces.Controller {
         }
     }
 
-    @HttpDelete('/:id')
+    @Delete('/:id')
     private delete(@RequestParam("id") id: string, @Response() res: Koa.Response): Promise<void> {
         return this.fooService.delete(id)
             .then(() => res.body = 204)
@@ -214,7 +214,7 @@ Registers the decorated controller method as a request handler for a particular 
 
 ### `@SHORTCUT(path, [middleware, ...])`
 
-Shortcut decorators which are simply wrappers for `@HttpMethod`. Right now these include `@HttpGet`, `@HttpPost`, `@HttpPut`, `@HttpPatch`, `@HttpHead`, `@HttpDelete`, and `@All`. For anything more obscure, use `@HttpMethod` (Or make a PR :smile:).
+Shortcut decorators which are simply wrappers for `@HttpMethod`. Right now these include `@Get`, `@Post`, `@Put`, `@Patch`, `@Head`, `@Delete`, and `@All`. For anything more obscure, use `@HttpMethod` (Or make a PR :smile:).
 
 ### `@Request()`
 Binds a method parameter to the request object.

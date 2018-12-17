@@ -8,31 +8,31 @@ export function Controller(path: string, ...middleware: interfaces.Middleware[])
     };
 }
 
-export function All   (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+export function All(path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
     return HttpMethod("all",    path, ...middleware);
 }
 
-export function HttpGet   (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+export function Get(path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
     return HttpMethod("get",    path, ...middleware);
 }
 
-export function HttpPost  (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+export function Post(path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
     return HttpMethod("post",   path, ...middleware);
 }
 
-export function HttpPut   (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+export function Put(path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
     return HttpMethod("put",    path, ...middleware);
 }
 
-export function HttpPatch (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+export function Patch(path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
     return HttpMethod("patch",  path, ...middleware);
 }
 
-export function HttpHead  (path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+export function Head(path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
     return HttpMethod("head",   path, ...middleware);
 }
 
-export function HttpDelete(path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
+export function Delete(path: string, ...middleware: interfaces.Middleware[]): interfaces.HandlerDecorator {
     return HttpMethod("delete", path, ...middleware);
 }
 

@@ -86,35 +86,35 @@ export class InversifyKoaServer {
             this._router.prefix(this._routingConfig.rootPath);
         }
 
-        let controllers: interfaces.Controller[] = this._container.getAll<interfaces.Controller>(TYPE.Controller);
+        const controllers: interfaces.Controller[] = this._container.getAll<interfaces.Controller>(TYPE.Controller);
 
         controllers.forEach((controller: interfaces.Controller) => {
 
-            let controllerMetadata: interfaces.ControllerMetadata = Reflect.getOwnMetadata(
+            const controllerMetadata: interfaces.ControllerMetadata = Reflect.getOwnMetadata(
                 METADATA_KEY.controller,
                 controller.constructor
             );
 
-            let methodMetadata: interfaces.ControllerMethodMetadata[] = Reflect.getOwnMetadata(
+            const methodMetadata: interfaces.ControllerMethodMetadata[] = Reflect.getOwnMetadata(
                 METADATA_KEY.controllerMethod,
                 controller.constructor
             );
 
-            let parameterMetadata: interfaces.ControllerParameterMetadata = Reflect.getOwnMetadata(
+            const parameterMetadata: interfaces.ControllerParameterMetadata = Reflect.getOwnMetadata(
                 METADATA_KEY.controllerParameter,
                 controller.constructor
             );
 
             if (controllerMetadata && methodMetadata) {
-                let controllerMiddleware = this.resolveMidleware(...controllerMetadata.middleware);
+                const controllerMiddleware = this.resolveMidleware(...controllerMetadata.middleware);
 
                 methodMetadata.forEach((metadata: interfaces.ControllerMethodMetadata) => {
                     let paramList: interfaces.ParameterMetadata[] = [];
                     if (parameterMetadata) {
                         paramList = parameterMetadata[metadata.key] || [];
                     }
-                    let handler = this.handlerFactory(controllerMetadata.target.name, metadata.key, paramList);
-                    let routeMiddleware = this.resolveMidleware(...metadata.middleware);
+                    const handler = this.handlerFactory(controllerMetadata.target.name, metadata.key, paramList);
+                    const routeMiddleware = this.resolveMidleware(...metadata.middleware);
                     this._router[metadata.method](
                         `${controllerMetadata.path}${metadata.path}`,
                         ...controllerMiddleware,
@@ -142,8 +142,8 @@ export class InversifyKoaServer {
         parameterMetadata: interfaces.ParameterMetadata[]): interfaces.KoaRequestHandler {
         // this function works like another top middleware to extract and inject arguments
         return async (ctx: Router.IRouterContext, next: () => Promise<any>) => {
-            let args = this.extractParameters(ctx, next, parameterMetadata);
-            let result: any = await this._container.getNamed(TYPE.Controller, controllerName)[key](...args);
+            const args = this.extractParameters(ctx, next, parameterMetadata);
+            const result: any = await this._container.getNamed(TYPE.Controller, controllerName)[key](...args);
 
             if (result && result instanceof Promise) {
                 // koa handle promises
@@ -181,7 +181,7 @@ export class InversifyKoaServer {
     }
 
     private getParam(source: any, paramType: string, name: string) {
-        let param = source[paramType] || source;
+        const param = source[paramType] || source;
         return param[name] || this.checkQueryParam(paramType, param, name);
     }
 

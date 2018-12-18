@@ -16,12 +16,14 @@ import {
     Next, Context
 } from "../src/decorators";
 import { TYPE, PARAMETER_TYPE } from "../src/constants";
+import { cleanUpMetadata } from "../src/utils";
 
 describe("Integration Tests:", () => {
     let server: InversifyKoaServer;
     let container: inversify.interfaces.Container;
 
     beforeEach((done) => {
+        cleanUpMetadata();
         // refresh container and container
         container = new Container();
         done();
@@ -44,7 +46,6 @@ describe("Integration Tests:", () => {
                     ctx.body = "Hello World";
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())
@@ -65,7 +66,6 @@ describe("Integration Tests:", () => {
                     });
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())
@@ -85,7 +85,6 @@ describe("Integration Tests:", () => {
                     ctx.body = "GET";
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())
@@ -111,7 +110,6 @@ describe("Integration Tests:", () => {
                     ctx.body = "GET";
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())
@@ -134,7 +132,6 @@ describe("Integration Tests:", () => {
                     }));
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())
@@ -154,7 +151,6 @@ describe("Integration Tests:", () => {
                 @Head("/") public headTest(ctx: Router.IRouterContext) { ctx.body = "HEAD"; }
                 @Delete("/") public deleteTest(ctx: Router.IRouterContext) { ctx.body = "DELETE"; }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             let agent = supertest(server.build().listen());
@@ -176,7 +172,6 @@ describe("Integration Tests:", () => {
             class TestController {
                 @HttpMethod("propfind", "/") public getTest(ctx: Router.IRouterContext) { ctx.body = "PROPFIND"; }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())
@@ -193,7 +188,6 @@ describe("Integration Tests:", () => {
             class TestController {
                 @Get("/") public getTest(ctx: Router.IRouterContext) { return result; }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())
@@ -209,7 +203,6 @@ describe("Integration Tests:", () => {
                     return "Such Text";
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             const customRouter = new Router({
                 prefix: "/api"
@@ -246,7 +239,6 @@ describe("Integration Tests:", () => {
                     return "pong";
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container, null, { rootPath: "/api/v1" });
 
@@ -291,7 +283,6 @@ describe("Integration Tests:", () => {
             class TestController {
                 @Get("/", spyA, spyB, spyC) public getTest(ctx: Router.IRouterContext) { ctx.body = "GET"; }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             let agent = supertest(server.build().listen());
@@ -312,7 +303,6 @@ describe("Integration Tests:", () => {
             class TestController {
                 @Post("/", spyA, spyB, spyC) public postTest(ctx: Router.IRouterContext) { ctx.body = "POST"; }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             let agent = supertest(server.build().listen());
@@ -333,7 +323,6 @@ describe("Integration Tests:", () => {
             class TestController {
                 @Put("/", spyA, spyB, spyC) public postTest(ctx: Router.IRouterContext) { ctx.body = "PUT"; }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             let agent = supertest(server.build().listen());
@@ -354,7 +343,6 @@ describe("Integration Tests:", () => {
             class TestController {
                 @Patch("/", spyA, spyB, spyC) public postTest(ctx: Router.IRouterContext) { ctx.body = "PATCH"; }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             let agent = supertest(server.build().listen());
@@ -375,7 +363,6 @@ describe("Integration Tests:", () => {
             class TestController {
                 @Head("/", spyA, spyB, spyC) public postTest(ctx: Router.IRouterContext) { ctx.body = "HEAD"; }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             let agent = supertest(server.build().listen());
@@ -396,7 +383,6 @@ describe("Integration Tests:", () => {
             class TestController {
                 @Delete("/", spyA, spyB, spyC) public postTest(ctx: Router.IRouterContext) { ctx.body = "DELETE"; }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             let agent = supertest(server.build().listen());
@@ -417,7 +403,6 @@ describe("Integration Tests:", () => {
             class TestController {
                 @All("/", spyA, spyB, spyC) public postTest(ctx: Router.IRouterContext) { ctx.body = "ALL"; }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             let agent = supertest(server.build().listen());
@@ -439,7 +424,6 @@ describe("Integration Tests:", () => {
             class TestController {
                 @Get("/") public getTest(ctx: Router.IRouterContext) { ctx.body = "GET"; }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())
@@ -460,7 +444,6 @@ describe("Integration Tests:", () => {
             class TestController {
                 @Get("/") public getTest(ctx: Router.IRouterContext) { ctx.body = "GET"; }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
 
@@ -488,7 +471,6 @@ describe("Integration Tests:", () => {
             class TestController {
                 @Get("/", spyC) public getTest(ctx: Router.IRouterContext) { ctx.body = "GET"; }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
 
@@ -517,7 +499,6 @@ describe("Integration Tests:", () => {
                 @Get("/") public getTest(ctx: Router.IRouterContext) { ctx.body = "GET"; }
             }
 
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
             container.bind<interfaces.KoaRequestHandler>(symbolId).toConstantValue(spyA);
             container.bind<interfaces.KoaRequestHandler>(strId).toConstantValue(spyB);
 
@@ -545,7 +526,6 @@ describe("Integration Tests:", () => {
                 public getTest(ctx: Router.IRouterContext) { ctx.body = "GET"; }
             }
 
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
             container.bind<interfaces.KoaRequestHandler>(symbolId).toConstantValue(spyA);
             container.bind<interfaces.KoaRequestHandler>(strId).toConstantValue(spyB);
 
@@ -573,7 +553,6 @@ describe("Integration Tests:", () => {
                 public getTest(ctx: Router.IRouterContext) { ctx.body = "GET"; }
             }
 
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
             container.bind<interfaces.KoaRequestHandler>(symbolId).toConstantValue(spyA);
             container.bind<interfaces.KoaRequestHandler>(strId).toConstantValue(spyB);
 
@@ -600,7 +579,6 @@ describe("Integration Tests:", () => {
                     return id;
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())
@@ -616,7 +594,6 @@ describe("Integration Tests:", () => {
                     return req.url;
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())
@@ -632,7 +609,6 @@ describe("Integration Tests:", () => {
                     return res.body = "foo";
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())
@@ -648,7 +624,6 @@ describe("Integration Tests:", () => {
                     return ctx.body = "foo";
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())
@@ -664,7 +639,6 @@ describe("Integration Tests:", () => {
                     return id;
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())
@@ -681,7 +655,6 @@ describe("Integration Tests:", () => {
                     return reqBody;
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             server.setConfig((app) => {
@@ -702,7 +675,6 @@ describe("Integration Tests:", () => {
                     return headers;
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())
@@ -723,7 +695,6 @@ describe("Integration Tests:", () => {
                     }
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             server.setConfig((app) => {
@@ -749,7 +720,6 @@ describe("Integration Tests:", () => {
                     return "foo";
                 }
             }
-            container.bind<interfaces.Controller>(TYPE.Controller).to(TestController).whenTargetNamed("TestController");
 
             server = new InversifyKoaServer(container);
             supertest(server.build().listen())

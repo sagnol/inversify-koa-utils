@@ -2,7 +2,8 @@ import * as Koa from "koa";
 import * as Router from "koa-router";
 import * as inversify from "inversify";
 import { interfaces } from "./interfaces";
-import { TYPE, METADATA_KEY, DEFAULT_ROUTING_ROOT_PATH, PARAMETER_TYPE } from "./constants";
+import { TYPE, METADATA_KEY, DEFAULT_ROUTING_ROOT_PATH, PARAMETER_TYPE, DUPLICATED_CONTROLLER_NAME } from "./constants";
+import { getControllersFromMetadata, getControllersFromContainer } from "./utils";
 
 /**
  * Wrapper for the koa server.
@@ -15,6 +16,7 @@ export class InversifyKoaServer {
     private _configFn: interfaces.ConfigFunction;
     private _errorConfigFn: interfaces.ConfigFunction;
     private _routingConfig: interfaces.RoutingConfig;
+    private _forceControllers: boolean;
 
     /**
      * Wrapper for the koa server.
@@ -25,7 +27,8 @@ export class InversifyKoaServer {
         container: inversify.interfaces.Container,
         customRouter?: Router,
         routingConfig?: interfaces.RoutingConfig,
-        customApp?: Koa
+        customApp?: Koa,
+        forceControllers = true
     ) {
         this._container = container;
         this._router = customRouter || new Router();
@@ -33,6 +36,7 @@ export class InversifyKoaServer {
             rootPath: DEFAULT_ROUTING_ROOT_PATH
         };
         this._app = customApp || new Koa();
+        this._forceControllers = forceControllers;
     }
 
     /**
@@ -86,7 +90,25 @@ export class InversifyKoaServer {
             this._router.prefix(this._routingConfig.rootPath);
         }
 
-        const controllers: interfaces.Controller[] = this._container.getAll<interfaces.Controller>(TYPE.Controller);
+        let constructors = getControllersFromMetadata();
+
+        constructors.forEach(constructor => {
+            const name = constructor.name;
+
+            if (this._container.isBoundNamed(TYPE.Controller, name)) {
+                throw new Error(DUPLICATED_CONTROLLER_NAME(name));
+            }
+
+            this._container.bind(TYPE.Controller)
+                .to(constructor)
+                .whenTargetNamed(name);
+        });
+
+        // const controllers: interfaces.Controller[] = this._container.getAll<interfaces.Controller>(TYPE.Controller);
+        let controllers = getControllersFromContainer(
+            this._container,
+            this._forceControllers
+        );
 
         controllers.forEach((controller: interfaces.Controller) => {
 
@@ -126,6 +148,7 @@ export class InversifyKoaServer {
         });
 
         this._app.use(this._router.routes());
+        this._app.use(this._router.allowedMethods());
     }
 
     private resolveMidleware(...middleware: interfaces.Middleware[]): interfaces.KoaRequestHandler[] {

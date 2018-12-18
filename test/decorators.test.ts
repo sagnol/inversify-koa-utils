@@ -2,8 +2,14 @@ import { expect } from "chai";
 import { Controller, HttpMethod, params } from "../src/decorators";
 import { interfaces } from "../src/interfaces";
 import { METADATA_KEY, PARAMETER_TYPE } from "../src/constants";
+import { cleanUpMetadata } from "../src/utils";
 
 describe("Unit Test: Controller Decorators", () => {
+
+    beforeEach((done) => {
+        cleanUpMetadata();
+        done();
+    });
 
     it("should add controller metadata to a class when decorated with @Controller", (done) => {
         let middleware = [function() { return; }, "foo", Symbol("bar")];
@@ -12,7 +18,7 @@ describe("Unit Test: Controller Decorators", () => {
         @Controller(path, ...middleware)
         class TestController {}
 
-        let controllerMetadata: interfaces.ControllerMetadata = Reflect.getMetadata("_controller", TestController);
+        let controllerMetadata: interfaces.ControllerMetadata = Reflect.getMetadata("inversify-express-utils:controller", TestController);
 
         expect(controllerMetadata.middleware).eql(middleware);
         expect(controllerMetadata.path).eql(path);
@@ -37,7 +43,8 @@ describe("Unit Test: Controller Decorators", () => {
             public test3() { return; }
         }
 
-        let methodMetadata: interfaces.ControllerMethodMetadata[] = Reflect.getMetadata("_controller-method", TestController);
+        let methodMetadata: interfaces.ControllerMethodMetadata[] = Reflect.getMetadata(
+            "inversify-express-utils:controller-method", TestController);
 
         expect(methodMetadata.length).eql(3);
 

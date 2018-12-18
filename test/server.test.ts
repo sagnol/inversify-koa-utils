@@ -8,8 +8,14 @@ import * as Router from "koa-router";
 import { InversifyKoaServer } from "../src/server";
 import { Container, injectable } from "inversify";
 import { TYPE } from "../src/constants";
+import { cleanUpMetadata } from "../src/utils";
 
 describe("Unit Test: InversifyKoaServer", () => {
+
+    beforeEach((done) => {
+        cleanUpMetadata();
+        done();
+    });
 
     it("should call the configFn before the errorConfigFn", (done) => {
         let middleware = function(ctx: Router.IRouterContext, next: () => Promise<any>) { return; };

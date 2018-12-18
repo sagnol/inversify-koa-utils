@@ -12,6 +12,7 @@
         "noImplicitAny": true,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
-        "outDir": "lib"
+        "outDir": "lib",
+        "removeComments": true
     }
 }

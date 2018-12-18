@@ -1,11 +1,11 @@
-const TYPE = {
+export const TYPE = {
     Controller: Symbol("Controller")
 };
 
-const METADATA_KEY = {
-    controller: "_controller",
-    controllerMethod: "_controller-method",
-    controllerParameter: "_controller-parameter"
+export const METADATA_KEY = {
+    controller: "inversify-express-utils:controller",
+    controllerMethod: "inversify-express-utils:controller-method",
+    controllerParameter: "inversify-express-utils:controller-parameter",
 };
 
 export enum PARAMETER_TYPE {
@@ -20,6 +20,11 @@ export enum PARAMETER_TYPE {
     CTX
 }
 
-const DEFAULT_ROUTING_ROOT_PATH = "/";
 
-export { TYPE, METADATA_KEY, DEFAULT_ROUTING_ROOT_PATH };
+export const DUPLICATED_CONTROLLER_NAME = (name: string) =>
+    `Two controllers cannot have the same name: ${name}`;
+
+export const NO_CONTROLLERS_FOUND = "No controllers have been found! " +
+"Please ensure that you have register at least one Controller.";
+
+export const DEFAULT_ROUTING_ROOT_PATH = "/";

@@ -10,14 +10,19 @@ import {
     Controller, HttpMethod, Get, Request,
     Response, RequestParam, QueryParam
 } from "../src/decorators";
+import { cleanUpMetadata } from "../src/utils";
 
 describe("Unit Test: Previous bugs", () => {
+
+    beforeEach((done) => {
+        cleanUpMetadata();
+        done();
+    });
 
     it("should support multiple controller methods with param annotations", (done) => {
 
         let container = new Container();
 
-        // @injectable()
         @Controller("/api/test")
         class TestController {
             @Get("/")
@@ -46,7 +51,6 @@ describe("Unit Test: Previous bugs", () => {
             }
         }
 
-        container.bind(TYPE.Controller).to(TestController);
         let server = new InversifyKoaServer(container);
         let app = server.build().listen();
 
@@ -73,7 +77,6 @@ describe("Unit Test: Previous bugs", () => {
     it("should support empty query params", (done) => {
         let container = new Container();
 
-        // @injectable()
         @Controller("/api/test")
         class TestController {
             @Get("/")
@@ -88,7 +91,6 @@ describe("Unit Test: Previous bugs", () => {
 
         }
 
-        container.bind(TYPE.Controller).to(TestController);
         let server = new InversifyKoaServer(container);
         let app = server.build().listen();
 

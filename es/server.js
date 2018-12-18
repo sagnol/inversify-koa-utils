@@ -35,58 +35,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 import * as Koa from "koa";
 import * as Router from "koa-router";
-import { TYPE, METADATA_KEY, DEFAULT_ROUTING_ROOT_PATH, PARAMETER_TYPE } from "./constants";
-/**
- * Wrapper for the koa server.
- */
-var InversifyKoaServer = /** @class */ (function () {
-    /**
-     * Wrapper for the koa server.
-     *
-     * @param container Container loaded with all controllers and their dependencies.
-     */
-    function InversifyKoaServer(container, customRouter, routingConfig, customApp) {
+import { TYPE, METADATA_KEY, DEFAULT_ROUTING_ROOT_PATH, PARAMETER_TYPE, DUPLICATED_CONTROLLER_NAME } from "./constants";
+import { getControllersFromMetadata, getControllersFromContainer } from "./utils";
+var InversifyKoaServer = (function () {
+    function InversifyKoaServer(container, customRouter, routingConfig, customApp, forceControllers) {
+        if (forceControllers === void 0) { forceControllers = true; }
         this._container = container;
         this._router = customRouter || new Router();
         this._routingConfig = routingConfig || {
             rootPath: DEFAULT_ROUTING_ROOT_PATH
         };
         this._app = customApp || new Koa();
+        this._forceControllers = forceControllers;
     }
-    /**
-     * Sets the configuration function to be applied to the application.
-     * Note that the config function is not actually executed until a call to InversifyKoaServer.build().
-     *
-     * This method is chainable.
-     *
-     * @param fn Function in which app-level middleware can be registered.
-     */
     InversifyKoaServer.prototype.setConfig = function (fn) {
         this._configFn = fn;
         return this;
     };
-    /**
-     * Sets the error handler configuration function to be applied to the application.
-     * Note that the error config function is not actually executed until a call to InversifyKoaServer.build().
-     *
-     * This method is chainable.
-     *
-     * @param fn Function in which app-level error handlers can be registered.
-     */
     InversifyKoaServer.prototype.setErrorConfig = function (fn) {
         this._errorConfigFn = fn;
         return this;
     };
-    /**
-     * Applies all routes and configuration to the server, returning the Koa application.
-     */
     InversifyKoaServer.prototype.build = function () {
-        // register server-level middleware before anything else
         if (this._configFn) {
             this._configFn.apply(undefined, [this._app]);
         }
         this.registerControllers();
-        // register error handlers after controllers
         if (this._errorConfigFn) {
             this._errorConfigFn.apply(undefined, [this._app]);
         }
@@ -94,11 +68,20 @@ var InversifyKoaServer = /** @class */ (function () {
     };
     InversifyKoaServer.prototype.registerControllers = function () {
         var _this = this;
-        // set prefix route in config rootpath
         if (this._routingConfig.rootPath !== DEFAULT_ROUTING_ROOT_PATH) {
             this._router.prefix(this._routingConfig.rootPath);
         }
-        var controllers = this._container.getAll(TYPE.Controller);
+        var constructors = getControllersFromMetadata();
+        constructors.forEach(function (constructor) {
+            var name = constructor.name;
+            if (_this._container.isBoundNamed(TYPE.Controller, name)) {
+                throw new Error(DUPLICATED_CONTROLLER_NAME(name));
+            }
+            _this._container.bind(TYPE.Controller)
+                .to(constructor)
+                .whenTargetNamed(name);
+        });
+        var controllers = getControllersFromContainer(this._container, this._forceControllers);
         controllers.forEach(function (controller) {
             var controllerMetadata = Reflect.getOwnMetadata(METADATA_KEY.controller, controller.constructor);
             var methodMetadata = Reflect.getOwnMetadata(METADATA_KEY.controllerMethod, controller.constructor);
@@ -118,6 +101,7 @@ var InversifyKoaServer = /** @class */ (function () {
             }
         });
         this._app.use(this._router.routes());
+        this._app.use(this._router.allowedMethods());
     };
     InversifyKoaServer.prototype.resolveMidleware = function () {
         var _this = this;
@@ -136,24 +120,22 @@ var InversifyKoaServer = /** @class */ (function () {
     };
     InversifyKoaServer.prototype.handlerFactory = function (controllerName, key, parameterMetadata) {
         var _this = this;
-        // this function works like another top middleware to extract and inject arguments
         return function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
             var _a, args, result;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         args = this.extractParameters(ctx, next, parameterMetadata);
-                        return [4 /*yield*/, (_a = this._container.getNamed(TYPE.Controller, controllerName))[key].apply(_a, args)];
+                        return [4, (_a = this._container.getNamed(TYPE.Controller, controllerName))[key].apply(_a, args)];
                     case 1:
                         result = _b.sent();
                         if (result && result instanceof Promise) {
-                            // koa handle promises
-                            return [2 /*return*/, result];
+                            return [2, result];
                         }
                         else if (result && !ctx.headerSent) {
                             ctx.body = result;
                         }
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         }); };
@@ -168,7 +150,7 @@ var InversifyKoaServer = /** @class */ (function () {
             switch (item.type) {
                 default:
                     args[item.index] = ctx;
-                    break; // response
+                    break;
                 case PARAMETER_TYPE.RESPONSE:
                     args[item.index] = this.getParam(ctx.response, null, item.parameterName);
                     break;
